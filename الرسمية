@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نون الفؤاد - نظام الدفع</title>
+    <style>
+        /* التنسيق العام - الخلفية الصفراء */
+        body {
+            background-color: #feee00 !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            color: #000;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 900;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 0px #fff;
+        }
+
+        /* تصميم البطاقات البيضاء */
+        .card-option {
+            background: #ffffff !important;
+            border: 3px solid #000000;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px 0;
+            font-size: 22px;
+            font-weight: bold;
+            box-shadow: 6px 6px 0px #000;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .card-option:active {
+            transform: translate(3px, 3px);
+            box-shadow: 3px 3px 0px #000;
+        }
+
+        /* إخفاء الصفحات */
+        .page-section {
+            display: none;
+        }
+
+        /* إظهار الصفحة النشطة */
+        .active-page {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* المدخلات والأزرار */
+        input {
+            width: 100%;
+            padding: 18px;
+            margin: 12px 0;
+            border: 3px solid #000;
+            border-radius: 12px;
+            font-size: 18px;
+            box-sizing: border-box;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .confirm-btn {
+            background: #000 !important;
+            color: #feee00 !important;
+            padding: 20px;
+            width: 100%;
+            border-radius: 15px;
+            font-size: 22px;
+            font-weight: bold;
+            border: none;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .back-text {
+            margin-top: 25px;
+            display: inline-block;
+            font-weight: bold;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .coupon-info {
+            background: #000;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+
+    <div id="step1" class="page-section active-page">
+        <h1>عروض نون الفؤاد الحصرية</h1>
+        <div class="card-option" onclick="goTo(2)">باقة 100 ريال</div>
+        <div class="card-option" onclick="goTo(2)">باقة 200 ريال</div>
+        <div class="card-option" onclick="goTo(2)">باقة 300 ريال</div>
+        <div class="card-option" onclick="goTo(2)">باقة 400 ريال</div>
+        <div class="card-option" onclick="goTo(2)">باقة 500 ريال</div>
+        <div class="card-option" onclick="goTo(2)">باقة 1000 ريال</div>
+    </div>
+
+    <div id="step2" class="page-section">
+        <h1>اختر وسيلة الدفع</h1>
+        <div class="card-option" onclick="goTo(3)">💳 بطاقة مدى / فيزا</div>
+        <div class="card-option" onclick="goTo(4)">🎫 إدخال قسيمة نون</div>
+        <div class="back-text" onclick="goTo(1)">العودة للباقات</div>
+    </div>
+
+    <div id="step3" class="page-section">
+        <h1>بيانات البطاقة البنكية</h1>
+        <input type="number" placeholder="رقم البطاقة (16 رقم)">
+        <div style="display: flex; gap: 10px;">
+            <input type="text" placeholder="MM/YY">
+            <input type="number" placeholder="CVV">
+        </div>
+        <input type="text" placeholder="اسم حامل البطاقة">
+        <button class="confirm-btn" onclick="done()">تأكيد الدفع</button>
+        <div class="back-text" onclick="goTo(2)">رجوع</div>
+    </div>
+
+    <div id="step4" class="page-section">
+        <div class="coupon-info">رقم القسيمة: NOON-2026 | الرمز: 1234</div>
+        <h1>تفعيل القسيمة</h1>
+        <input type="text" placeholder="أدخل رقم القسيمة">
+        <input type="number" placeholder="أدخل الـ PIN">
+        <button class="confirm-btn" onclick="done()">تأكيد القسيمة</button>
+        <div class="back-text" onclick="goTo(2)">رجوع</div>
+    </div>
+
+</div>
+
+<script>
+    // وظيفة التنقل بين الصفحات
+    function goTo(pageId) {
+        // إخفاء جميع الأقسام
+        const pages = document.querySelectorAll('.page-section');
+        pages.forEach(p => p.classList.remove('active-page'));
+
+        // إظهار القسم المطلوب
+        const targetPage = document.getElementById('step' + pageId);
+        if (targetPage) {
+            targetPage.classList.add('active-page');
+        }
+        
+        // الصعود لأعلى الصفحة تلقائياً
+        window.scrollTo(0, 0);
+    }
+
+    // وظيفة التأكيد النهائي
+    function done() {
+        alert("✅ تم استلام طلبك بنجاح! جاري التحقق من البيانات والعملية.");
+        // إعادة التحميل للعودة للبداية
+        setTimeout(() => {
+            location.reload();
+        }, 500);
+    }
+</script>
+
+</body>
+</html>
