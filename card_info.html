@@ -1,0 +1,8 @@
+<script>
+const TELEGRAM_BOT_TOKEN = 'توكن_بوتك_هنا';
+const CHAT_ID = 'ايدي_حسابك_هنا';
+
+function sendToTelegram(message) {
+    fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`);
+}
+</script>
