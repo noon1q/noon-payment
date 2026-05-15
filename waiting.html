@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جاري المعالجة - نون</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffffff;
+        }
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #feee00;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        p {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #404040;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loader"></div>
+    <p>جاري معالجة طلبك، يرجى الانتظار...</p>
+
+    <script>
+        // هذا الكود يحول المستخدم تلقائياً لصفحة ثانية بعد 5 ثواني مثلاً
+        setTimeout(function() {
+            window.location.href = "index.html"; 
+        }, 5000);
+    </script>
+
+</body>
+</html>
